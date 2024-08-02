@@ -8,27 +8,25 @@ from django.http import JsonResponse
 def cart_summary(request):
     return render(request, 'cart_summary.html', {})
 
-
-
 def cart_add(request):
     cart = Cart(request)
     if request.POST.get('action') == 'post':
         product_id = int(request.POST.get('product_id'))
         product = get_object_or_404(Product, id=product_id)
         cart.add(product=product)
-
-        response = JsonResponse({'Product Name: ': product.name})
+        
+        # Get cart quantity
+        cart_quantity = cart.__len__()
+        
+        # Return JSON response with cart quantity
+        response = JsonResponse({'qty': cart_quantity})
         return response
-
-
-
-
-
+    
+    # If the request method is not POST or the action is not 'post', return bad request response
+    return JsonResponse({'error': 'Invalid request'}, status=400)
 
 def cart_update(request):
     pass
-
-
 
 def cart_delete(request):
     pass
