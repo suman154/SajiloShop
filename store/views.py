@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from .forms import *
+from .forms import SignUpForm, UpdateUserForm
 
 
 # Create your views here.
@@ -62,6 +62,25 @@ def register_user(request):
         return render(request, 'register.html', {'form':form})
     
 
+def update_user(request):
+    if request.user.is_authenticated:
+        user = request.user
+        form = UpdateUserForm(instance=user)
+        if request.method == "POST":
+            form = UpdateUserForm(request.POST, instance=user)
+            if form.is_valid():
+                form.save()
+                messages.success(request, ("User has been updated successfully!"))
+                return redirect('home')
+            else:
+                messages.warning(request, ("There was an error while updating user...please try again!"))
+                return redirect('update_user')
+        else:
+            return render(request, 'update_user.html', {'form':form})
+    else:
+        messages.warning(request, ("You need to login first!"))
+        return redirect('login')
+
 
 def product(request, pk):
     product = Product.objects.get(id=pk)
@@ -86,3 +105,5 @@ def category_summary(request):
     categories = Category.objects.all()
     return render(request, 'category_summary.html', {'categories':categories})
     
+
+
