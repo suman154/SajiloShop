@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from .forms import SignUpForm, UpdateUserForm
+from .forms import SignUpForm, UpdateUserForm, ChangePasswordForm
 
 
 # Create your views here.
@@ -80,6 +80,27 @@ def update_user(request):
     else:
         messages.warning(request, ("You need to login first!"))
         return redirect('login')
+
+
+def update_password(request):
+    if request.user.is_authenticated:
+        user = request.user
+        form = ChangePasswordForm(user)
+        if request.method == "POST":
+            form = ChangePasswordForm(user, request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request, ("Password has been updated successfully!"))
+                return redirect('home')
+            else:
+                messages.warning(request, ("There was an error while updating password...please try again!"))
+                return redirect('update_password')
+        else:
+            return render(request, 'update_password.html', {'form':form})
+    else:
+        messages.warning(request, ("You need to login first!"))
+        return redirect('login')
+
 
 
 def product(request, pk):
