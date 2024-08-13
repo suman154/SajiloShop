@@ -1,0 +1,10 @@
+# ignore python cache files
+__pycache__/
+# ignore virtualenv
+env/
+# ignore logs
+logs/
+# ignore media
+media/
+# ignore static
+static/
