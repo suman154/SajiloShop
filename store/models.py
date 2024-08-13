@@ -1,8 +1,44 @@
 from django.db import models
 from datetime import datetime
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
 
 
 # Create your models here.
+
+# Create cuttomer profile model
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=100, default='', blank=True)
+    last_name = models.CharField(max_length=100, default='', blank=True)
+    phone = models.CharField(max_length=20, default='', blank=True)
+    email = models.EmailField(default='', blank=True)
+    address = models.CharField(max_length=50, default='', blank=True)
+    city = models.CharField(max_length=50, default='', blank=True)
+    state = models.CharField(max_length=50, default='', blank=True)
+    country = models.CharField(max_length=50, default='', blank=True)
+    zip = models.CharField(max_length=10, default='', blank=True)
+    image = models.ImageField(upload_to='uploads/profile/', default='uploads/profile/default.jpg')
+
+    def __str__(self):
+        return f'{self.user.username} Profile'
+
+
+
+# Create a user profile by default when user signs up
+def create_profile(sender, instance, created, **kwargs):
+    if created:
+        user_profile =Profile.objects.create(user=instance)
+        user_profile.save()
+
+
+# Automate the profile creation
+post_save.connect(create_profile, sender=User)
+
+
+
+
+
 class Category(models.Model):
     name = models.CharField(max_length=50)
 
