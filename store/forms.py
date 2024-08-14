@@ -101,16 +101,11 @@ class ChangePasswordForm(SetPasswordForm):
 class UpdateInfoForm(forms.ModelForm):
 	class Meta:
 		model = Profile
-		fields = ('first_name', 'last_name', 'phone', 'email', 'address', 'city', 'state', 'country', 'zip', 'image')
+		fields = ('address', 'city', 'state', 'country', 'zip')
 		widgets = {
-			'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'}),
-			'last_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last Name'}),
-			'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone'}),
-			'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}),
 			'address': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Address'}),
 			'city': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'City'}),
 			'state': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'State'}),
 			'country': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Country'}),
 			'zip': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'ZIP'}),
-			'image': forms.ClearableFileInput(attrs={'class': 'form-control-file'})
 		}
