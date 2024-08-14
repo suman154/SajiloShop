@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django import forms
+from .models import Profile
 from django.contrib.auth.forms import UserCreationForm, SetPasswordForm
 
 
@@ -95,3 +96,21 @@ class ChangePasswordForm(SetPasswordForm):
 		self.fields['new_password2'].help_text = '<span class="form-text text-muted"><small>Enter the same password as before, for verification.</small></span>'
 
 	
+
+
+class UpdateInfoForm(forms.ModelForm):
+	class Meta:
+		model = Profile
+		fields = ('first_name', 'last_name', 'phone', 'email', 'address', 'city', 'state', 'country', 'zip', 'image')
+		widgets = {
+			'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'First Name'}),
+			'last_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Last Name'}),
+			'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Phone'}),
+			'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}),
+			'address': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Address'}),
+			'city': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'City'}),
+			'state': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'State'}),
+			'country': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Country'}),
+			'zip': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'ZIP'}),
+			'image': forms.ClearableFileInput(attrs={'class': 'form-control-file'})
+		}

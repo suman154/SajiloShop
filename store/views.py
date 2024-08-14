@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect
+from django import forms
 from .models import *
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from django import forms
-from .forms import SignUpForm, UpdateUserForm, ChangePasswordForm
+from .forms import SignUpForm, UpdateUserForm, ChangePasswordForm, UpdateInfoForm
 
 
 # Create your views here.
@@ -100,6 +100,27 @@ def update_password(request):
     else:
         messages.warning(request, ("You need to login first!"))
         return redirect('login')
+
+
+def update_info(request):
+    if request.user.is_authenticated:
+        current_user = Profile.objects.get(user=request.user)
+        profile = request.user.profile
+        form = UpdateInfoForm(instance=profile)
+        if request.method == "POST":
+            form = UpdateInfoForm(request.POST, request.FILES, instance=current_user)
+            if form.is_valid():
+                form.save()
+                messages.success(request, ("Profile has been updated successfully!"))
+                return redirect('home')
+            else:
+                messages.warning(request, ("There was an error while updating profile...please try again!"))
+                return redirect('update_info')
+        else:
+            return render(request, 'update_info.html', {'form':form})
+
+
+
 
 
 
