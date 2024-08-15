@@ -14,5 +14,6 @@ urlpatterns = [
     path('product/<int:pk>', product, name='product'),
     path('category/<str:foo>', category, name='category'),
     path('category_summary/', category_summary, name='category_summary'),
+    path('search/', search, name='search'),
 
 ]
