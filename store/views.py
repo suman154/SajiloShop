@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from .forms import SignUpForm, UpdateUserForm, ChangePasswordForm, UpdateInfoForm
 from django.utils.datastructures import MultiValueDictKeyError
-
+from django.db.models import Q
 
 # Create your views here.
 def home(request):
@@ -151,14 +151,26 @@ def category_summary(request):
 
 
 def search(request):
-    # Determine if they filled out the search form
     if request.method == "POST":
         try:
             searched = request.POST['searched']
-            products = Product.objects.filter(name__icontains=searched)
-            return render(request, 'search.html', {'searched':searched, 'products': products})
+            searched = Product.objects.filter(Q(name__icontains=searched) | Q(description__icontains=searched))
+            if not searched:
+                messages.success(request, ("No results found!"))
+                return redirect('search.html')
+            else:
+                return render(request, 'search.html', {'searched':searched})
         except MultiValueDictKeyError:
-            messages.warning(request, "Please provide a search query!")
+            messages.warning(request, ("There was an error while searching...please try again!"))
             return redirect('search')
     else:
-        return render(request, 'search.html', {})
+        if 'searched' in request.GET:
+            searched = request.GET['searched']
+            searched = Product.objects.filter(Q(name__icontains=searched) | Q(description__icontains=searched))
+            if not searched:
+                messages.success(request, ("No results found!"))
+                return redirect('search.html')
+            else:
+                return render(request, 'search.html', {'searched':searched})
+        else:
+            return render(request, 'search.html', {})

@@ -30,8 +30,10 @@
                             </div>
                             </div>
                             {% if searched %}
-                                You Searched for: {{ searched }}
-                                {% endif %}
+                                {% for product in searched %}
+                                    {{ product }}
+                                {% endfor %}
+                            {% endif %}
                             </div>
                             </center>
                         </div>
